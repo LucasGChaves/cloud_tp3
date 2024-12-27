@@ -1,26 +1,23 @@
 apiVersion: v1
 data:
   pyfile: "from typing import Any\n\ndef handler(input: dict, context: object) ->
-    dict[str, Any]:\n\n    timestamp = input.get(\"timestamp\")\n    bytes_sent =
-    input.get(\"net_io_counters_eth0-bytes_sent1\")\n    bytes_recv = input.get(\"net_io_counters_eth0-bytes_recv1\")\n
-    \   memory_cached = input.get(\"virtual_memory-cached\")\n    memory_buffers =
-    input.get(\"virtual_memory-buffers\")\n    memory_total = input.get(\"virtual_memory-total\")\n\n
-    \   env = context.env\n\n    percent_network_egress = (bytes_sent / (bytes_sent
-    + bytes_recv)) * 100\n\n    percent_memory_caching  = ((memory_cached + memory_buffers)
-    / memory_total) * 100\n\n    cpus = [key for key in input.keys() if 'cpu-percent-'
-    in key]\n\n    cpus_avg = {key + '_avg': 0 for key in cpus}\n\n    for cpu_key
-    in cpus:\n        cpu_usage = input.get(cpu_key)\n\n        cpu_states = env.get(cpu_key,
-    [])\n        cpu_states.append(cpu_usage)\n\n        if(len(cpu_states) > 12):\n
-    \           cpu_states.pop(0)\n        \n        avg_usage = sum(cpu_states)/len(cpu_states)\n
-    \       cpus_avg[cpu_key + '_avg'] = avg_usage\n        env[cpu_key + '_avg']
-    = avg_usage\n        env[cpu_key] = cpu_states\n    \n    output = {\n        \"timestamp\":
-    timestamp,\n        \"percent-network-egress\": percent_network_egress,\n        \"percent-memory-caching\":
-    percent_memory_caching,\n        'cpus_avg': cpus_avg\n    }\n\n    return output\n
-    \       \n\n\n\n\n\n\n\n"
+    dict[str, Any]:\n\n    timestamp = input.get(\"timestamp\", 0)\n    bytes_sent
+    = input.get(\"net_io_counters_eth0-bytes_sent\", 0)\n    bytes_recv = input.get(\"net_io_counters_eth0-bytes_recv\",
+    0)\n    memory_cached = input.get(\"virtual_memory-cached\", 0)\n    memory_buffers
+    = input.get(\"virtual_memory-buffers\", 0)\n    memory_total = input.get(\"virtual_memory-total\",
+    0)\n\n    env = context.env\n\n    percent_network_egress = (bytes_sent / (bytes_sent
+    + bytes_recv)) * 100 if (bytes_sent + bytes_recv) > 0 else 0\n    \n    percent_memory_caching
+    = ((memory_cached + memory_buffers) / memory_total) * 100 if memory_total > 0
+    else 0\n\n    cpus = [key for key in input.keys() if key.startswith(\"cpu_percent-\")]\n\n
+    \   cpus_avg = {}\n\n    for cpu_key in cpus:\n        cpu_usage = input.get(cpu_key,
+    0)\n\n        cpu_states = env.get(cpu_key, [])\n        cpu_states.append(cpu_usage)\n\n
+    \       if(len(cpu_states) > 12):\n            cpu_states.pop(0)\n        \n        avg_usage
+    = sum(cpu_states)/len(cpu_states)\n        cpus_avg[f\"{cpu_key}_avg\"] = avg_usage\n
+    \       env[f\"{cpu_key}_avg\"] = avg_usage\n        env[cpu_key] = cpu_states\n
+    \   \n    output = {\n        \"timestamp\": timestamp,\n        \"percent-network-egress\":
+    percent_network_egress,\n        \"percent-memory-caching\": percent_memory_caching,\n
+    \       'cpus_avg': cpus_avg\n    }\n\n    return output\n\n\n\n\n\n\n"
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2024-12-27T15:37:51Z"
+  creationTimestamp: null
   name: pyfile
-  namespace: lucaschaves
-  resourceVersion: "7996496"
-  uid: 02d8d3cd-aa36-4187-b98f-562616ed53ad
