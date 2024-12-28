@@ -10,4 +10,5 @@ spec:
   - protocol: TCP
     port: 52044
     targetPort: 8501
+    NodePort: 32066
   type: NodePort
