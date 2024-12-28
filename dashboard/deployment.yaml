@@ -19,10 +19,3 @@ spec:
         image: lucasgchaves/dashboard:1.0
         ports:
         - containerPort: 8501
-        env:
-        - name: REDIS_HOST
-          value: "redis-service"
-        - name: REDIS_PORT
-          value: "6379"
-        - name: REDIS_KEY
-          value: "lucaschaves-proj3-output"
