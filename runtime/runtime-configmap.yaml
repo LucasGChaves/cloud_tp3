@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: runtime-configmap
+data:
+  REDIS_INPUT_KEY: "metrics"
+  REDIS_OUTPUT_KEY: "lucaschaves-proj3-output"
+  MONITOR_PERIOD: "5"
+  ENTRY_FUNCTION: "handler"
+  ZIP_ENTRY_FILE: "handler.py"

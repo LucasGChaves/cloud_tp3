@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lucaschaves-serverless-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lucaschaves-serverless-redis
+  template:
+    metadata:
+      labels:
+        app: lucaschaves-serverless-redis
+    spec:
+      containers:
+      - name: lucasgchaves/serverless-redis:1.0
+        image: lucasmsp/serverless:redis
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        volumeMounts:
+        - name: pyfile
+          mountPath: "/opt/usermodule.py"
+          subPath: pyfile
+        - name: usercode-zip
+          mountPath: "/opt/usercode.zip"
+          subPath: usercode.zip
+        env:
+        - name: REDIS_HOST
+          value: "192.168.121.48"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_INPUT_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-configmap
+              key: REDIS_INPUT_KEY
+        - name: REDIS_OUTPUT_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-configmap
+              key: REDIS_OUTPUT_KEY
+        - name: MONITOR_PERIOD
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-configmap
+              key: MONITOR_PERIOD
+        - name: ENTRY_FUNCTION
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-configmap
+              key: ENTRY_FUNCTION
+        - name: ZIP_ENTRY_FILE
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-configmap
+              key: ZIP_ENTRY_FILE
+      volumes:
+      - name: pyfile
+        configMap:
+          name: pyfile
+      - name: usercode-zip
+        configMap:
+          name: usercodezip-configmap
