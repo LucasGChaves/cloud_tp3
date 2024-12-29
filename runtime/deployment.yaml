@@ -13,8 +13,8 @@ spec:
         app: lucaschaves-serverless-redis
     spec:
       containers:
-      - name: lucasgchaves/serverless-redis:1.0
-        image: lucasmsp/serverless:redis
+      - name: lucaschaves-serverless-redis
+        image: lucasgchaves/serverless-redis:1.0
         imagePullPolicy: Always
         resources:
           requests:
