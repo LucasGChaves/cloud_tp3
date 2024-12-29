@@ -6,7 +6,7 @@ COPY runtime.py /app/runtime.py
 
 RUN mkdir -p /opt /tmp
 
-# COPY requirements.txt /app/requirements.txt
-# RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python", "/app/runtime.py"]
