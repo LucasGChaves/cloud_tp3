@@ -93,9 +93,11 @@ def monitor_redis():
 
                     if handler is None:
                         if os.path.isfile(ZIP_PATH):
+                            print("runtime: Using ZIP file.")
                             handler = load_handler_from_zip(ZIP_PATH, ZIP_ENTRY_FILE, ENTRY_FUNCTION)
                             context.function_getmtime = os.path.getmtime(ZIP_PATH)
                         else:
+                            print("runtime: Using pyfile.")
                             handler = load_handler_from_pyfile(PYFILE_PATH)
                             context.function_getmtime = os.path.getmtime(PYFILE_PATH)
 
