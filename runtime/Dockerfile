@@ -9,5 +9,4 @@ RUN mkdir -p /opt /tmp
 # COPY requirements.txt /app/requirements.txt
 # RUN pip install --no-cache-dir -r requirements.txt
 
-# Comando para executar o runtime.py
 CMD ["python", "/app/runtime.py"]
