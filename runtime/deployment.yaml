@@ -26,41 +26,19 @@ spec:
           subPath: pyfile
         - name: usercode-zip
           mountPath: "/opt/usercode.zip"
-          subPath: usercode.zip
+          subPath: usercode-zip
         env:
         - name: REDIS_HOST
           value: "192.168.121.48"
         - name: REDIS_PORT
           value: "6379"
-        - name: REDIS_INPUT_KEY
-          valueFrom:
-            configMapKeyRef:
-              name: runtime-configmap
-              key: REDIS_INPUT_KEY
-        - name: REDIS_OUTPUT_KEY
-          valueFrom:
-            configMapKeyRef:
-              name: runtime-configmap
-              key: REDIS_OUTPUT_KEY
-        - name: MONITOR_PERIOD
-          valueFrom:
-            configMapKeyRef:
-              name: runtime-configmap
-              key: MONITOR_PERIOD
-        - name: ENTRY_FUNCTION
-          valueFrom:
-            configMapKeyRef:
-              name: runtime-configmap
-              key: ENTRY_FUNCTION
-        - name: ZIP_ENTRY_FILE
-          valueFrom:
-            configMapKeyRef:
-              name: runtime-configmap
-              key: ZIP_ENTRY_FILE
+        envFrom:          
+          configMapRef:
+            name: runtime-configmap
       volumes:
       - name: pyfile
         configMap:
           name: pyfile
       - name: usercode-zip
         configMap:
-          name: usercodezip-configmap
+          name: usercode-zip
