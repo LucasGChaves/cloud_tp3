@@ -31,8 +31,6 @@ placeholder = st.empty()
 while True:
     data = fetch_data_from_redis()
 
-    print(data)
-
     if data:
         timestamp = data.get("timestamp", "N/A")
         percent_network_egress = data.get("percent-network-egress", 0)
@@ -51,7 +49,7 @@ while True:
             st.dataframe(cpu_df)
 
             st.subheader("Plots")
-            st.line_chart(cpu_df)
+            st.bar_chart(cpu_df)
 
     else:
         st.warning("No data found.")

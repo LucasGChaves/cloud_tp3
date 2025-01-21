@@ -16,12 +16,12 @@ spec:
     spec:
       containers:
       - name: dashboard
-        image: lucasgchaves/dashboard:1.0
+        image: lucasgchaves/dashboard:1.1
         ports:
         - containerPort: 8501
         env:
         - name: REDIS_HOST
-          value: "192.168.121.48"
+          value: "192.168.121.187"
         - name: REDIS_PORT
           value: "6379"
         - name: REDIS_KEY

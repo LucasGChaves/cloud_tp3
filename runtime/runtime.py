@@ -29,7 +29,7 @@ class Context:
 
 redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
-def load_handler_from_pyfile(pyfile_path):
+def load_handler_from_pyfile(pyfile_path, entry_function):
     if not Path(pyfile_path).exists():
         raise FileNotFoundError(f"pyfile not found in specified path: {pyfile_path}")
     
@@ -39,9 +39,9 @@ def load_handler_from_pyfile(pyfile_path):
     user_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(user_module)
 
-    if not hasattr(user_module, "handler"):
-        raise AttributeError("handler function not found in pyfile.")
-    return getattr(user_module, "handler")
+    if not hasattr(user_module, entry_function):
+        raise AttributeError(f"{entry_function} function not found in pyfile.")
+    return getattr(user_module, entry_function)
 
 def load_handler_from_zip(zip_path, zip_entry_file, entry_function):
     if not Path(zip_path).exists():
@@ -98,8 +98,6 @@ def monitor_redis():
             if data is not None:
                 input_data = json.loads(data)
 
-                zip_mtime = Path(ZIP_PATH).stat().st_mtime
-
                 if handler is None:
                     if os.path.isfile(ZIP_PATH):
                         print("runtime: Using ZIP file.")
@@ -107,10 +105,8 @@ def monitor_redis():
                         context.function_getmtime = os.path.getmtime(ZIP_PATH)
                     else:
                         print("runtime: Using pyfile.")
-                        handler = load_handler_from_pyfile(PYFILE_PATH)
+                        handler = load_handler_from_pyfile(PYFILE_PATH, ENTRY_FUNCTION)
                         context.function_getmtime = os.path.getmtime(PYFILE_PATH)
-
-                    context.function_getmtime = zip_mtime
 
                 context.last_execution = time.time()
 

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: lucaschaves-serverless-redis
-        image: lucasgchaves/serverless-redis:1.0
+        image: lucasgchaves/serverless-redis:1.2
         imagePullPolicy: Always
         resources:
           requests:
@@ -24,12 +24,9 @@ spec:
         - name: pyfile
           mountPath: "/opt/usermodule.py"
           subPath: pyfile
-        - name: usercode-zip
-          mountPath: "/opt/usercode.zip"
-          subPath: usercode-zip
         env:
         - name: REDIS_HOST
-          value: "192.168.121.48"
+          value: "192.168.121.187"
         - name: REDIS_PORT
           value: "6379"
         envFrom:          
